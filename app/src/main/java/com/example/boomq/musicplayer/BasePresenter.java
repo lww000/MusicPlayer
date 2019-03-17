@@ -6,11 +6,19 @@ import android.support.annotation.UiThread;
  * Created by boomq on 2019/3/16.
  */
 
-public interface BasePresenter<V extends BaseView,M extends BaseModel> {
-    @UiThread
-    void attachView(V view);
-    @UiThread
-    void detachView(boolean retainInstance);
+public abstract class BasePresenter<V extends BaseView,M extends BaseModel>{
+    protected V view;
+    protected M model;
+
+    public BasePresenter(){
+    }
+
+    void attachView(V view){
+        this.view=view;
+    }
+    void detachView(){
+        this.view=null;
+    }
 }
 interface BaseView{
 }

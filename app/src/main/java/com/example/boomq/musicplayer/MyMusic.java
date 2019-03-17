@@ -30,6 +30,16 @@ public class MyMusic extends DataSupport {
     public MyMusic(){
     }
 
+    public MyMusic(String id, String title, String singer, String path, int size, int time, String album){
+        this.musicId=musicId;
+        this.musicName=musicName;
+        this.singer=singer;
+        this.path=path;
+        this.size=size;
+        this.time=time;
+        this.album=album;
+    }
+
     public boolean isCheck(){
         return isCheck;
     }

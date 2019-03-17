@@ -5,5 +5,8 @@ package com.example.boomq.musicplayer;
  */
 
 public interface Callback1 {
-    void onResult(String text);
+    void onResult1();
+    void onResult2();
+    void onResult3(MyMusic myMusic);
+    void onResult4();
 }

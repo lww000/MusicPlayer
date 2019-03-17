@@ -11,11 +11,14 @@ interface PlayerListContract {
 
     interface PlayerListView extends BaseView{
         void updateUI1();
+        void updateUI2();
+        void updateUI3(MyMusic myMusic);
+        void updateUI4();
     }
     interface PlayerListModel extends BaseModel{
-        void getData1(Callback1 callback1);
     }
-    interface PlayerListPresenter extends BasePresenter<PlayerListView,PlayerListModel>{
-        void request1();
+    abstract class PlayerListPresenter extends BasePresenter<PlayerListView,PlayerListModel>{
+        abstract void updateProgress();
+        abstract void quertMusic();
     }
 }
