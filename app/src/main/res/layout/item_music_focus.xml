@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/music_playing"
+    android:text="播放"
+    android:textColor="#ff3366"
+    android:layout_gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="48dp">
+</TextView>
