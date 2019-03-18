@@ -3,6 +3,7 @@ package com.example.boomq.musicplayer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Message;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -42,14 +43,14 @@ public class PlayerListModel implements PlayerListContract.PlayerListModel {
             callback1.onResult2();
             while(cursor.moveToNext()){
                 String id=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                String title=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                String musicName=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
                 String singer=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
                 String album=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
                 String path=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
                 int time=cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
                 int size=cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 
-                MyMusic myMusic=new MyMusic(id,title,singer,path,size,time,album);
+                MyMusic myMusic=new MyMusic(id,musicName,singer,path,size,time,album);
                 callback1.onResult3(myMusic);
             }
             callback1.onResult4();

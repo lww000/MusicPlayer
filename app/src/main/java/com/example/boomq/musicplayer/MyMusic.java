@@ -30,8 +30,8 @@ public class MyMusic extends DataSupport {
     public MyMusic(){
     }
 
-    public MyMusic(String id, String title, String singer, String path, int size, int time, String album){
-        this.musicId=musicId;
+    public MyMusic(String id, String musicName, String singer, String path, int size, int time, String album){
+        this.musicId=id;
         this.musicName=musicName;
         this.singer=singer;
         this.path=path;
