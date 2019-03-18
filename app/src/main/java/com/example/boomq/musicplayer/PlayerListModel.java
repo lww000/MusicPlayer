@@ -23,7 +23,7 @@ public class PlayerListModel implements PlayerListContract.PlayerListModel {
 
     //实现seekbar的动态更新
     @SuppressLint("HandlerLeak")
-    Handler handler = new Handler(new Handler.Callback() {
+    Handler  mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
             callback1.onResult1();
@@ -33,7 +33,7 @@ public class PlayerListModel implements PlayerListContract.PlayerListModel {
     });
     //每秒发送一个空的message，提示handler更新
     public void updateProgress() {
-        handler.sendMessageDelayed(Message.obtain(),1000);
+        mHandler.sendMessageDelayed(Message.obtain(),1000);
     }
 
     public void queryMusic(){

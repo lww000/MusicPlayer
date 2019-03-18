@@ -15,8 +15,8 @@ import java.util.List;
  */
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> implements View.OnClickListener{
-    private int selected;
-    private List<MyMusic> musicList;
+    private int selectedMusic;
+    private List<MyMusic> musicPlayList;
     private OnItemClickListener onItemClickListener;
     private Context mContext;
 
@@ -31,15 +31,15 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(MusicAdapter.ViewHolder holder, int position) {
-        MyMusic music=musicList.get(position);
+        MyMusic music=musicPlayList.get(position);
         holder.content.removeAllViews();
-        if(position==selected){
-            holder.content.addView(addFocusView());
+        if(position==selectedMusic){
+            holder.content.addView(addFocusMusicView());
             TextView textView=holder.content.findViewById(R.id.music_playing);
             textView.setText("正在播放:"+music.getMusicName());
         }
         else{
-            holder.content.addView(addNormalView());
+            holder.content.addView(addNormalMusicView());
             TextView musicName=holder.content.findViewById(R.id.music_name);
             TextView musicSinger=holder.content.findViewById(R.id.music_singer);
             musicName.setText(music.getMusicName());
@@ -51,7 +51,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return musicList.size();
+        return musicPlayList.size();
     }
 
     @Override
@@ -71,19 +71,19 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
         }
     }
 
-    private View addFocusView(){
+    private View addFocusMusicView(){
         return LayoutInflater.from(mContext).inflate(R.layout.item_music_focus,null,false);
     }
 
-    private View addNormalView(){
+    private View addNormalMusicView(){
         return LayoutInflater.from(mContext).inflate(R.layout.item_music_list,null,false);
     }
-    public void setSelected(int selected){
-        this.selected=selected;
+    public void setselectedMusic(int selectedMusic){
+        this.selectedMusic=selectedMusic;
     }
 
-    public MusicAdapter(List<MyMusic> musicList){
-        this.musicList=musicList;
+    public MusicAdapter(List<MyMusic> musicPlayList){
+        this.musicPlayList=musicPlayList;
     }
     public interface OnItemClickListener{
         void onItemClick(View v,int position);

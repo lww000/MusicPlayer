@@ -38,10 +38,10 @@ import java.util.logging.Handler;
 public class PlayerListActivity extends AppCompatActivity implements View.OnClickListener,SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener,PlayerListContract.PlayerListView{
    private MediaPlayer mediaPlayer;
    private MusicAdapter musicAdapter;
-   private List<MyMusic> musicList;
+   private List<MyMusic> musicPlayList;
    private AppCompatSeekBar seekBar;
-   private TextView timeStart,timeEnd;
-   private int mPosition=-1;
+   private TextView musicTimeStart,musicTimeEnd;
+   private int musicPosition=-1;
    private Button playButton;
    private PlayerListPresenter presenter;
 
@@ -54,13 +54,13 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
         if(actionBar!=null){
             actionBar.hide();
         }
-        requestPermission();
+        requestUsePermission();
         initView();
         presenter=new PlayerListPresenter(this,this);
-        presenter.quertMusic();
+        presenter.queryMusic();
     }
 
-    private void requestPermission(){
+    private void requestUsePermission(){
         if(ContextCompat.checkSelfPermission(PlayerListActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(PlayerListActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
@@ -86,36 +86,36 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
     }
 
     private  void initView(){
-        timeStart=findViewById(R.id.time_start);
-        timeEnd=findViewById(R.id.time_end);
+        musicTimeStart=findViewById(R.id.time_start);
+        musicTimeEnd=findViewById(R.id.time_end);
         seekBar=findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(this);
 
         playButton=findViewById(R.id.music_play);
-        Button lastButton=findViewById(R.id.last_music);
-        Button nextButton=findViewById(R.id.next_music);
+        Button lastMusicButton=findViewById(R.id.last_music);
+        Button nextMusicButton=findViewById(R.id.next_music);
 
         playButton.setOnClickListener(this);
-        lastButton.setOnClickListener(this);
-        nextButton.setOnClickListener(this);
+        lastMusicButton.setOnClickListener(this);
+        nextMusicButton.setOnClickListener(this);
 
-        final RecyclerView musicListView=findViewById(R.id.music_list);
-        musicList=new ArrayList<>();
-        musicListView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        musicAdapter=new MusicAdapter(musicList);
-        musicListView.setAdapter(musicAdapter);
-        musicAdapter.setSelected(-1);
+        final RecyclerView musicPlayListView=findViewById(R.id.music_list);
+        musicPlayList=new ArrayList<>();
+        musicPlayListView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        musicAdapter=new MusicAdapter(musicPlayList);
+        musicPlayListView.setAdapter(musicAdapter);
+        musicAdapter.setselectedMusic(-1);
         musicAdapter.setOnItemClickListener(new MusicAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                changeMusic(position);
-                mPosition=position;
+                changePlayingMusic(position);
+                musicPosition=position;
             }
         });
-        musicListView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        musicPlayListView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
     }
 
-    private void playMusic(MyMusic myMusic){
+    private void musicPlayer(MyMusic myMusic){
         try{
             if(mediaPlayer==null){//判断是否为空，避免重复创建
                 mediaPlayer=new MediaPlayer();
@@ -125,7 +125,7 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
             mediaPlayer.setDataSource(myMusic.getPath());//设置播放源
             mediaPlayer.prepare();
             mediaPlayer.start();
-            timeEnd.setText(parseDate(mediaPlayer.getDuration()));
+            musicTimeEnd.setText(parseDate(mediaPlayer.getDuration()));
             seekBar.setMax(mediaPlayer.getDuration());
             presenter.updateProgress();
         } catch (IOException e) {
@@ -133,27 +133,27 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void changeMusic(int position){
+    private void changePlayingMusic(int position){
         if(position<0){
-            mPosition=musicList.size()-1;
-            playMusic(musicList.get(mPosition));
+            musicPosition=musicPlayList.size()-1;
+            musicPlayer(musicPlayList.get(musicPosition));
         }
-        else if(position>musicList.size()-1){
-            mPosition=0;
-            playMusic(musicList.get(0));
+        else if(position>musicPlayList.size()-1){
+            musicPosition=0;
+            musicPlayer(musicPlayList.get(0));
         }
         else{
-            playMusic(musicList.get(position));
+            musicPlayer(musicPlayList.get(position));
         }
 
-        musicAdapter.setSelected(mPosition);//设置选中音乐
+        musicAdapter.setselectedMusic(musicPosition);//设置选中音乐
         //更新recycler view，因为设置了两个布局，正在播放的音乐行布局变更
         musicAdapter.notifyDataSetChanged();
         playButton.setBackgroundResource(R.mipmap.ic_music_play);
 
     }
 
-    private void startOrPause(){//播放或暂停逻辑实现
+    private void pauseOrStart(){//播放或暂停逻辑实现
         if(mediaPlayer.isPlaying()){
             mediaPlayer.pause();
             playButton.setBackgroundResource(R.mipmap.ic_pause);
@@ -171,18 +171,18 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
 
         switch(view.getId()){
             case R.id.last_music:
-                changeMusic(--mPosition);
+                changePlayingMusic(--musicPosition);
                 break;
             case R.id.music_play:
                 if(mediaPlayer==null){
-                    changeMusic(0);
+                    changePlayingMusic(0);
                 }
                 else{
-                    startOrPause();
+                    pauseOrStart();
                 }
                 break;
             case R.id.next_music:
-                changeMusic(++mPosition);
+                changePlayingMusic(++musicPosition);
                 break;
         }
 
@@ -191,7 +191,7 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         //实现轮播效果
-        changeMusic(++mPosition);
+        changePlayingMusic(++musicPosition);
     }
 
     @Override
@@ -214,17 +214,17 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void updateUI1() {
         seekBar.setProgress(mediaPlayer.getCurrentPosition());
-        timeStart.setText(parseDate(mediaPlayer.getCurrentPosition()));
+        musicTimeStart.setText(parseDate(mediaPlayer.getCurrentPosition()));
     }
 
     @Override
     public void updateUI2() {
-        musicList.clear();
+        musicPlayList.clear();
     }
 
     @Override
     public void updateUI3(MyMusic myMusic) {
-        musicList.add(myMusic);
+        musicPlayList.add(myMusic);
     }
 
     @Override

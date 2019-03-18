@@ -45,7 +45,7 @@ public class PlayerListPresenter extends PlayerListContract.PlayerListPresenter 
     }
 
     @Override
-    void quertMusic() {
+    void queryMusic() {
        model.queryMusic();
     }
 }

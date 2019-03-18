@@ -19,6 +19,6 @@ interface PlayerListContract {
     }
     abstract class PlayerListPresenter extends BasePresenter<PlayerListView,PlayerListModel>{
         abstract void updateProgress();
-        abstract void quertMusic();
+        abstract void queryMusic();
     }
 }
