@@ -3,6 +3,7 @@ package com.example.boomq.musicplayer;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -18,8 +19,10 @@ import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,15 +38,16 @@ import java.util.logging.Handler;
  * Created by boomq on 2019/3/16.
  */
 
-public class PlayerListActivity extends AppCompatActivity implements View.OnClickListener,SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener,PlayerListContract.PlayerListView{
+public class PlayerListActivity extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener,SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener,PlayerListContract.PlayerListView{
    private MediaPlayer mediaPlayer;
    private MusicAdapter musicAdapter;
    private List<MyMusic> musicPlayList;
    private AppCompatSeekBar seekBar;
-   private TextView musicTimeStart,musicTimeEnd;
+   private TextView musicTimeStart,musicTimeEnd,bottomMusicName,bottomMusicSinger;
    private int musicPosition=-1;
    private Button playButton;
    private PlayerListPresenter presenter;
+   private RelativeLayout bottomMusic;
 
 
     @Override
@@ -88,6 +92,8 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
     private  void initView(){
         musicTimeStart=findViewById(R.id.time_start);
         musicTimeEnd=findViewById(R.id.time_end);
+        bottomMusicName=findViewById(R.id.music_name2);
+        bottomMusicSinger=findViewById(R.id.music_singer2);
         seekBar=findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(this);
 
@@ -98,6 +104,10 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
         playButton.setOnClickListener(this);
         lastMusicButton.setOnClickListener(this);
         nextMusicButton.setOnClickListener(this);
+
+        bottomMusic=findViewById(R.id.bottom_set);
+        bottomMusic.setOnTouchListener(this);
+        bottomMusic.setOnClickListener(this);
 
         final RecyclerView musicPlayListView=findViewById(R.id.music_list);
         musicPlayList=new ArrayList<>();
@@ -126,6 +136,8 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
             mediaPlayer.prepare();
             mediaPlayer.start();
             musicTimeEnd.setText(parseDate(mediaPlayer.getDuration()));
+            bottomMusicName.setText(myMusic.getMusicName());
+            bottomMusicSinger.setText(myMusic.getSinger());
             seekBar.setMax(mediaPlayer.getDuration());
             presenter.updateProgress();
         } catch (IOException e) {
@@ -135,18 +147,18 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
 
     private void changePlayingMusic(int position){
         if(position<0){
-            musicPosition=musicPlayList.size()-1;
-            musicPlayer(musicPlayList.get(musicPosition));
+            position=musicPlayList.size()-1;
+            musicPlayer(musicPlayList.get(position));
         }
         else if(position>musicPlayList.size()-1){
-            musicPosition=0;
+            position=0;
             musicPlayer(musicPlayList.get(0));
         }
         else{
             musicPlayer(musicPlayList.get(position));
         }
 
-        musicAdapter.setselectedMusic(musicPosition);//设置选中音乐
+        musicAdapter.setselectedMusic(position);//设置选中音乐
         //更新recycler view，因为设置了两个布局，正在播放的音乐行布局变更
         musicAdapter.notifyDataSetChanged();
         playButton.setBackgroundResource(R.mipmap.ic_music_play);
@@ -184,6 +196,9 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
             case R.id.next_music:
                 changePlayingMusic(++musicPosition);
                 break;
+            case R.id.bottom_set:
+                Intent intent=new Intent(PlayerListActivity.this,PlayerActivity.class);
+                startActivity(intent);
         }
 
     }
@@ -243,5 +258,13 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
     protected void attachBaseContext(Context base){
         super.attachBaseContext(base);
         MultiDex.install(base);
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if(motionEvent.getAction()==MotionEvent.ACTION_UP){
+
+        }
+        return false;
     }
 }
