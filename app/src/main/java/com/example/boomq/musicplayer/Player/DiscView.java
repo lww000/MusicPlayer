@@ -1,4 +1,4 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.Player;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -11,14 +11,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +25,9 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.example.boomq.musicplayer.MyMusic;
+import com.example.boomq.musicplayer.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,7 @@ public class DiscView extends RelativeLayout {
 
     public DiscView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context,attrs,defStyleAttr);
-        mScreenWidth=DisplayUtil.getScreenWidth(context);
+        mScreenWidth= DisplayUtil.getScreenWidth(context);
         mScreenHeight=DisplayUtil.getScreenHeight(context);
     }
 

@@ -1,4 +1,4 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.PlayerList;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.boomq.musicplayer.MyMusic;
+import com.example.boomq.musicplayer.R;
 
 import java.util.List;
 

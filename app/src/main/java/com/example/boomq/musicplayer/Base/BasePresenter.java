@@ -1,6 +1,4 @@
-package com.example.boomq.musicplayer;
-
-import android.support.annotation.UiThread;
+package com.example.boomq.musicplayer.Base;
 
 /**
  * Created by boomq on 2019/3/16.
@@ -20,7 +18,4 @@ public abstract class BasePresenter<V extends BaseView,M extends BaseModel>{
         this.view=null;
     }
 }
-interface BaseView{
-}
-interface BaseModel{
-}
+

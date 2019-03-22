@@ -1,4 +1,4 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.Player;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -20,9 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,25 +29,23 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
-import com.example.boomq.musicplayer.R;
+
 import com.example.boomq.musicplayer.MyMusic;
-import com.example.boomq.musicplayer.MusicService;
-import com.example.boomq.musicplayer.DisplayUtil;
-import com.example.boomq.musicplayer.BackgroundAnimationRelativeLayout;
-import com.example.boomq.musicplayer.DiscView;
+import com.example.boomq.musicplayer.Player.PlayerContract;
+import com.example.boomq.musicplayer.R;
 
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.boomq.musicplayer.DiscView.*;
+import static com.example.boomq.musicplayer.Player.DiscView.*;
 
 /**
  * Created by boomq on 2019/3/19.
  */
 
-public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayInfo, View.OnClickListener,PlayerContract.PlayerView{
+public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayInfo, View.OnClickListener,PlayerContract.PlayerView {
 
     private DiscView mDisc;
     private Toolbar mToolbar;
@@ -209,7 +205,7 @@ public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayI
         scaleBitmap = Bitmap.createScaledBitmap(cropBitmap, bitmap.getWidth() / 50, bitmap.getHeight() / 50, false);
 
 
-        final Bitmap blurBitmap=FastBlurUtil.doBlur(scaleBitmap,8,true);
+        final Bitmap blurBitmap= FastBlurUtil.doBlur(scaleBitmap,8,true);
 
         final Drawable foregroundDrawable=new BitmapDrawable(blurBitmap);
         //加入灰色遮罩层，避免图片过亮影响其他图片

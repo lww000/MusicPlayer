@@ -1,4 +1,4 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.Player;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+
+import com.example.boomq.musicplayer.MyMusic;
 
 import java.io.IOException;
 import java.util.ArrayList;

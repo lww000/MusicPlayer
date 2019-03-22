@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.boomq.musicplayer.PlayerListActivity"
+        <activity android:name="com.example.boomq.musicplayer.PlayerList.PlayerListActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,12 +23,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.boomq.musicplayer.PlayerActivity"
+        <activity android:name="com.example.boomq.musicplayer.Player.PlayerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
 
         <service
-            android:name="com.example.boomq.musicplayer.MusicService"
+            android:name="com.example.boomq.musicplayer.Player.MusicService"
             android:enabled="true"
             android:exported="false"/>
 

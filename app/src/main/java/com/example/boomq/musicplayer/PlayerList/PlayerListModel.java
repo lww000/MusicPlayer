@@ -1,4 +1,4 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.PlayerList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +9,11 @@ import android.net.Uri;
 import android.os.Message;
 import android.os.Handler;
 import android.provider.MediaStore;
+
+import com.example.boomq.musicplayer.MyMusic;
+import com.example.boomq.musicplayer.PlayerList.PlayerListCallback;
+import com.example.boomq.musicplayer.PlayerList.PlayerListContract;
+import com.example.boomq.musicplayer.R;
 
 
 /**
@@ -82,7 +87,7 @@ public class PlayerListModel implements PlayerListContract.PlayerListModel {
             mBitmap= BitmapFactory.decodeFile(album_art);
         }
         else{
-            mBitmap=BitmapFactory.decodeResource(mContext.getResources(),R.mipmap.unknown_music);
+            mBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.unknown_music);
         }
         return mBitmap;
     }

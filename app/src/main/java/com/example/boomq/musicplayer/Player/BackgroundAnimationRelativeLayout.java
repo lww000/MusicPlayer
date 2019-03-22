@@ -1,4 +1,4 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.Player;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -11,6 +11,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.RelativeLayout;
+
+import com.example.boomq.musicplayer.R;
 
 /**
  * Created by boomq on 2019/3/20.

@@ -1,4 +1,4 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.Player;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,7 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 
-import com.example.boomq.musicplayer.PlayerContract;
+import com.example.boomq.musicplayer.MyMusic;
+import com.example.boomq.musicplayer.Player.PlayerCallback;
+import com.example.boomq.musicplayer.Player.PlayerContract;
+import com.example.boomq.musicplayer.R;
 
 /**
  * Created by boomq on 2019/3/21.
@@ -84,7 +87,7 @@ public class PlayerModel implements PlayerContract.PlayerModel{
             mBitmap= BitmapFactory.decodeFile(album_art);
         }
         else{
-            mBitmap=BitmapFactory.decodeResource(mContext.getResources(),R.mipmap.unknown_music);
+            mBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.unknown_music);
         }
         return mBitmap;
     }

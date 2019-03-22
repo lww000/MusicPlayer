@@ -1,16 +1,12 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.PlayerList;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;;
+;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -28,18 +24,20 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.litepal.LitePal;
+import com.example.boomq.musicplayer.MyMusic;
+import com.example.boomq.musicplayer.Player.PlayerActivity;
+import com.example.boomq.musicplayer.PlayerList.PlayerListContract;
+import com.example.boomq.musicplayer.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 /**
  * Created by boomq on 2019/3/16.
  */
 
-public class PlayerListActivity extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener,SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener,PlayerListContract.PlayerListView{
+public class PlayerListActivity extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener,SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener,PlayerListContract.PlayerListView {
    private MediaPlayer mediaPlayer;
    private MusicAdapter musicAdapter;
    private List<MyMusic> musicPlayList;

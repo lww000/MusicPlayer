@@ -1,4 +1,6 @@
-package com.example.boomq.musicplayer;
+package com.example.boomq.musicplayer.PlayerList;
+
+import com.example.boomq.musicplayer.MyMusic;
 
 /**
  * Created by boomq on 2019/3/17.
