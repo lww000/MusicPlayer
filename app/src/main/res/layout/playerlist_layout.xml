@@ -28,7 +28,7 @@
 
         <ImageView
             android:id="@+id/musicAlbumPic"
-            android:background="#fff"
+            android:background="#ffcccc"
             android:layout_width="70dp"
             android:layout_height="70dp" />
         <LinearLayout

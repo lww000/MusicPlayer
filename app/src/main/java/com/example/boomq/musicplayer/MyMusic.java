@@ -1,19 +1,29 @@
 package com.example.boomq.musicplayer;
 
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Bitmap;
 
 import org.litepal.crud.DataSupport;
+
+import java.io.Serializable;
 
 /**
  * Created by boomq on 2019/3/16.
  */
 
-public class MyMusic extends DataSupport {
+public class MyMusic extends DataSupport implements Serializable {
+
+    private int musicRes;
+
+    private int album_Id;
+
     private String musicId;
 
     private String musicName;
 
     private String singer;
+
+
+
 
     private String path;
 
@@ -25,12 +35,12 @@ public class MyMusic extends DataSupport {
 
     private boolean isCheck = false;
 
-    private BitmapDrawable albumPic;
+    private Bitmap albumPic;
 
     public MyMusic(){
     }
 
-    public MyMusic(String id, String musicName, String singer, String path, int size, int time, String album){
+    public MyMusic(String id, String musicName, String singer, String path, int size, int time, String album, Bitmap albumPic,int album_Id){
         this.musicId=id;
         this.musicName=musicName;
         this.singer=singer;
@@ -38,6 +48,36 @@ public class MyMusic extends DataSupport {
         this.size=size;
         this.time=time;
         this.album=album;
+        this.albumPic=albumPic;
+        this.album_Id=album_Id;
+    }
+
+    public MyMusic(String id, String musicName, String singer, String path, int size, int time, String album,int album_Id,int musicRes){
+        this.musicId=id;
+        this.musicName=musicName;
+        this.singer=singer;
+        this.path=path;
+        this.size=size;
+        this.time=time;
+        this.album=album;
+        this.album_Id=album_Id;
+        this.musicRes=musicRes;
+    }
+
+    public int getMusicRes() {
+        return musicRes;
+    }
+
+    public void setMusicRes(int musicRes) {
+        this.musicRes = musicRes;
+    }
+
+    public void setAlbum_Id(int album_Id) {
+        this.album_Id = album_Id;
+    }
+
+    public int getAlbum_Id() {
+        return album_Id;
     }
 
     public boolean isCheck(){
@@ -48,11 +88,11 @@ public class MyMusic extends DataSupport {
         isCheck = check;
     }
 
-    public BitmapDrawable getAlbumPic() {
+    public Bitmap getAlbumPic() {
         return albumPic;
     }
 
-    public void setAlbumPic(BitmapDrawable albumPic) {
+    public void setAlbumPic(Bitmap albumPic) {
         this.albumPic = albumPic;
     }
 
@@ -120,7 +160,7 @@ public class MyMusic extends DataSupport {
         this.path = path;
     }
 
-    public MyMusic(String musicId, String musicName, String singer, String path, int size, int time, String album, boolean isCheck, BitmapDrawable albumPic){
+    public MyMusic(String musicId, String musicName, String singer, String path, int size, int time, String album, boolean isCheck, Bitmap albumPic){
         this.musicId=musicId;
         this.musicName=musicName;
         this.singer=singer;

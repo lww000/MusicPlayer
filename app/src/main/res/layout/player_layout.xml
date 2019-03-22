@@ -1,6 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.boomq.musicplayer.BackgroundAnimationRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_blackground_src"
+    android:fitsSystemWindows="true">
 
-</LinearLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        app:subtitleTextAppearance="@style/toolbar_subtitle"
+        app:titleTextAppearance="@style/toolbar_title">
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/toolBar"
+        android:background="#33ffffff"/>
+
+    <include
+        android:id="@+id/discview"
+        layout="@layout/layout_discview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolBar"
+        android:layout_above="@+id/MusicTime"/>
+
+    <RelativeLayout
+        android:id="@+id/MusicTime"
+        android:layout_above="@+id/PlayOption"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/CurrentTime"
+            android:textColor="#ccc"
+            android:textSize="9sp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="01:34"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <SeekBar
+            android:id="@+id/musicSeekBar"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@id/CurrentTime"
+            android:layout_toStartOf="@+id/totalTime"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/ic_seekbar_thumb_src"/>
+
+        <TextView
+            android:id="@+id/totalTime"
+            android:textColor="#ccc"
+            android:textSize="9sp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="05:34"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/PlayOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:id="@+id/ivLast"
+            android:src="@drawable/ic_last_src"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/ivPlayOrPause"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_play_src"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/ivNext"
+            android:src="@drawable/ic_next_src"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</com.example.boomq.musicplayer.BackgroundAnimationRelativeLayout>

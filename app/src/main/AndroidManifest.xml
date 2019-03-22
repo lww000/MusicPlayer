@@ -3,11 +3,8 @@
     package="com.example.boomq.musicplayer">
 
     <uses-permission
-
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-
         tools:ignore="ManifestOrder" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -17,15 +14,24 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name="com.example.boomq.musicplayer.PlayerListActivity">
+        android:theme="@style/AppTheme">
+        <activity android:name="com.example.boomq.musicplayer.PlayerListActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.example.boomq.musicplayer.PlayerActivity">
+
+        <activity android:name="com.example.boomq.musicplayer.PlayerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
+
+        <service
+            android:name="com.example.boomq.musicplayer.MusicService"
+            android:enabled="true"
+            android:exported="false"/>
+
 
     </application>
 </manifest>

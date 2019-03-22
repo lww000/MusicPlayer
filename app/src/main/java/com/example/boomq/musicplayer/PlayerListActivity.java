@@ -5,12 +5,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.multidex.MultiDex;
+import android.support.annotation.Nullable;;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnTouc
    private List<MyMusic> musicPlayList;
    private AppCompatSeekBar seekBar;
    private TextView musicTimeStart,musicTimeEnd,bottomMusicName,bottomMusicSinger;
+   private ImageView bottomMusicPic;
    private int musicPosition=-1;
    private Button playButton;
    private PlayerListPresenter presenter;
@@ -94,6 +96,8 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnTouc
         musicTimeEnd=findViewById(R.id.time_end);
         bottomMusicName=findViewById(R.id.music_name2);
         bottomMusicSinger=findViewById(R.id.music_singer2);
+        bottomMusicPic=findViewById(R.id.musicAlbumPic);
+
         seekBar=findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(this);
 
@@ -138,6 +142,7 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnTouc
             musicTimeEnd.setText(parseDate(mediaPlayer.getDuration()));
             bottomMusicName.setText(myMusic.getMusicName());
             bottomMusicSinger.setText(myMusic.getSinger());
+            bottomMusicPic.setImageBitmap(myMusic.getAlbumPic());
             seekBar.setMax(mediaPlayer.getDuration());
             presenter.updateProgress();
         } catch (IOException e) {
@@ -254,16 +259,11 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnTouc
         return min+":"+second;
     }
 
-    @Override
-    protected void attachBaseContext(Context base){
-        super.attachBaseContext(base);
-        MultiDex.install(base);
-    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if(motionEvent.getAction()==MotionEvent.ACTION_UP){
-
+              onClick(view);
         }
         return false;
     }

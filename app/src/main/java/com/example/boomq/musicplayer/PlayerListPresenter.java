@@ -14,7 +14,7 @@ public class PlayerListPresenter extends PlayerListContract.PlayerListPresenter 
     public PlayerListPresenter(PlayerListContract.PlayerListView view,Context context){
         this.context=context;
         this.view=view;
-        model=new PlayerListModel(new Callback1() {
+        model=new PlayerListModel(new PlayerListCallback() {
             @Override
             public void onResult1() {
                 PlayerListPresenter.this.view.updateUI1();
