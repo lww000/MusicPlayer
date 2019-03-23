@@ -17,14 +17,17 @@
         android:theme="@style/AppTheme">
         <activity android:name="com.example.boomq.musicplayer.PlayerList.PlayerListActivity"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <activity android:name="com.example.boomq.musicplayer.Player.PlayerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <service

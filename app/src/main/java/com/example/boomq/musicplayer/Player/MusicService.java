@@ -102,12 +102,17 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         }
         else{
             mMediaPlayer.stop();
-            mMediaPlayer=null;
+            if(mMediaPlayer==null){
+                mMediaPlayer=new MediaPlayer();
+            }
+            else{
+                mMediaPlayer.reset();
+            }
 
             try {
-                mMediaPlayer=new MediaPlayer();
+
                 mMediaPlayer.setOnCompletionListener(this);
-                mMediaPlayer.reset();
+//                mMediaPlayer.reset();
                 mMediaPlayer.setDataSource(mMusicDatas.get(index).getPath());
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
