@@ -13,14 +13,19 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,14 +35,24 @@ import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.example.boomq.musicplayer.HistoryPlay.MusicSQLiteHelper;
+import com.example.boomq.musicplayer.LikeMusic.LikeMusicAdapter;
+import com.example.boomq.musicplayer.LikeMusic.LikeMusicHelper;
+import com.example.boomq.musicplayer.LrcView.DefaultLrcBulider;
+import com.example.boomq.musicplayer.LrcView.GetLrc;
+import com.example.boomq.musicplayer.LrcView.LrcUtil;
+import com.example.boomq.musicplayer.LrcView.LrcView;
 import com.example.boomq.musicplayer.MyMusic;
 import com.example.boomq.musicplayer.Player.PlayerContract;
 import com.example.boomq.musicplayer.R;
+import com.example.boomq.musicplayer.LrcView.DefaultLrcBulider;
 
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.boomq.musicplayer.Player.DiscView.*;
 
@@ -47,15 +62,24 @@ import static com.example.boomq.musicplayer.Player.DiscView.*;
 
 public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayInfo, View.OnClickListener,PlayerContract.PlayerView {
 
+    private LrcView lrcView;
     private DiscView mDisc;
     private Toolbar mToolbar;
     private SeekBar mSeekbar;
-    private ImageView mIvPlayOrPause,mIvNext,mIvLast;
+    private ImageView mIvPlayOrPause,mIvNext,mIvLast,likeMusic;
     private TextView mMusicDuration,mTotalMusicDuration;
     private BackgroundAnimationRelativeLayout mRootLayout;
     public static final int MUSIC_MESSAGE=0;
     public static final String PARAM_MUSIC_LIST="PARAM_MUSIC_LIST";
     private PlayerPresenter playerPresenter;
+    private LikeMusicHelper likeMusicHelper;
+    private LikeMusicAdapter likeMusicAdapter;
+    private okhttp3.Callback callback;
+    public MediaPlayer mMediaPlayer=new MediaPlayer();
+
+
+    private List<Map<String, Object>> allMusic = new ArrayList<>();
+    private List<Map<String, Object>> storedMusic = new ArrayList<>();
 
     private MusicReceiver mMusicReceiver=new MusicReceiver();
     private List<MyMusic> mMusicDatas=new ArrayList<>();
@@ -67,6 +91,12 @@ public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_layout);
         playerPresenter=new PlayerPresenter(this,this);
+        likeMusicHelper=new LikeMusicHelper(this,"store_music.db",null,1);
+
+
+        getStoredMusic(storedMusic,likeMusicHelper);
+        getAllMusicFromDb();
+
 
         requestUsePermission();
         initMusicDatas();
@@ -74,6 +104,163 @@ public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayI
         initMusicReceiver();
         makeStatusBarTransparent();
     }
+
+
+
+
+
+    private void getMusic(Cursor musicCursor) {
+        while (musicCursor.moveToNext()) {
+            Map<String, Object> item = new HashMap<String, Object>();
+            long id = musicCursor.getLong(musicCursor
+                    .getColumnIndex(MediaStore.Audio.Media._ID));
+            String title = musicCursor.getString(musicCursor
+                    .getColumnIndex(MediaStore.Audio.Media.TITLE));
+            String singer = musicCursor.getString(musicCursor
+                    .getColumnIndex(MediaStore.Audio.Media.ARTIST));
+            if (singer != null && singer.equals("<unknown>")) {
+                continue;
+            }
+            int duration = musicCursor.getInt(musicCursor
+                    .getColumnIndex(MediaStore.Audio.Media.DURATION));
+            long size = musicCursor.getLong(musicCursor
+                    .getColumnIndex(MediaStore.Audio.Media.SIZE));
+            String path = musicCursor.getString(musicCursor
+                    .getColumnIndex(MediaStore.Audio.Media.DATA));
+            int isMusic = musicCursor.getInt(musicCursor
+                    .getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
+            if (isMusic != 0) {
+                item.put("id", id);
+                item.put("title", title);
+                item.put("singer", singer);
+                item.put("duration", duration2Time(duration));
+                item.put("size", size);
+                item.put("path",path);
+                allMusic.add(item);
+            }
+
+        }
+    }
+
+    private void getAllMusicFromDb() {
+        if (allMusic.size() > 0)
+            allMusic.clear();
+        Cursor cursor=this.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null,null,null,MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        getMusic(cursor);
+    }
+
+    private void getStoredMusic(List<Map<String,Object>> storedMusic,LikeMusicHelper likeMusicHelper){
+        if (storedMusic.size() > 0)
+            storedMusic.clear();
+        Cursor cursor=likeMusicHelper.getReadableDatabase().rawQuery("select * from like_music",null );
+        while(cursor.moveToNext()){
+            Map<String,Object> item=new HashMap<>();
+            item.put("title",cursor.getString(1));
+            item.put("singer",cursor.getString(2));
+            item.put("duration",cursor.getString(3));
+            item.put("path",cursor.getString(4));
+
+            storedMusic.add(item);
+        }
+    }
+
+    protected boolean checkIfStored(String path) {
+        for (Map<String, Object> map : allMusic) {
+            if (path.equals((String) map.get("path"))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void refreshStoredMusic(Map<String, Object> musicInfo) {
+        int i = 0;
+        for (; i < storedMusic.size(); i++) {
+            Map<String, Object> map = storedMusic.get(i);
+            String path = (String) map.get("path");
+            if (path.equals((String) musicInfo.get("path"))) {
+                Log.d("TAG", "remove index =" + i);
+                storedMusic.remove(i);
+                return;
+            }
+        }
+        storedMusic.add(musicInfo);
+    }
+    private class MyAsyncTask extends AsyncTask<String, Void, Void> {
+        private ImageView likeMusicView;
+        private Map<String, Object> musicInfo;
+        // 标记收藏，true表示收藏音乐成功，false表示取消收藏音乐
+        private boolean storeSuccess;
+
+        public MyAsyncTask(ImageView starView, Map<String, Object> musicInfo) {
+            this.likeMusicView = starView;
+            this.musicInfo = musicInfo;
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        protected Void doInBackground(String... params) {
+            Log.d("TAG", "doInBackground");
+            Cursor cursor = likeMusicHelper.getReadableDatabase().rawQuery(
+                    "select * from like_music", null);
+            while (cursor.moveToNext()) {
+                String title = cursor.getString(1);
+                String singer = cursor.getString(2);
+                Log.d("TAG", "title = " + title + " singer = " + singer);
+                Log.d("TAG",
+                        "musicInfo.title = " + (String) musicInfo.get("title")
+                                + " musicInfo.singer = "
+                                + (String) musicInfo.get("singer"));
+                if (cursor.getString(4).equals((String) musicInfo.get("path"))) {
+                    // 已经收藏的音乐取消收藏并移出收藏音乐表格-stored_music
+                    likeMusicHelper.getReadableDatabase()
+                            .execSQL(
+                                    "delete from like_music where title like ? and singer like ?",
+                                    new String[] { title, singer });
+                    storeSuccess = false;
+                    return null;
+                }
+            }
+            // 未收藏的音乐加入到收藏中
+            likeMusicHelper.getReadableDatabase().execSQL(
+                    "insert into like_music values(null, ?, ?, ?, ?)",
+                    new Object[] { musicInfo.get("title"),
+                            musicInfo.get("singer"), musicInfo.get("duration"),
+                            musicInfo.get("path") });
+            storeSuccess = true;
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            if (storeSuccess) {
+                likeMusicView.setImageResource(R.drawable.xihuan);
+                refreshStoredMusic(musicInfo);
+                Toast.makeText(getBaseContext(), "收藏成功", Toast.LENGTH_LONG).show();
+            } else {
+                likeMusicView.setImageResource(R.drawable.xihuan2);
+                refreshStoredMusic(musicInfo);
+                Toast.makeText(getBaseContext(), "取消收藏", Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
+
+
+
+
+
+
+
+
 
     private void requestUsePermission(){
         if(ContextCompat.checkSelfPermission(PlayerActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
@@ -101,11 +288,43 @@ public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayI
         //注册本地广播
         LocalBroadcastManager.getInstance(this).registerReceiver(mMusicReceiver,intentFilter);
     }
+
+
+
     private void initView(){
         mDisc=(DiscView)findViewById(R.id.discview);
+        //mDisc.setVisibility(VISIBLE);
+        //lrcView.findViewById(R.id.lrcview);
+
+        //lrcView.setVisibility(INVISIBLE);
         mIvNext=(ImageView)findViewById(R.id.ivNext);
         mIvLast=(ImageView)findViewById(R.id.ivLast);
         mIvPlayOrPause=(ImageView)findViewById(R.id.ivPlayOrPause);
+        likeMusic=(ImageView)findViewById(R.id.like_music);
+        likeMusic.setImageResource(R.drawable.xihuan2);
+
+        for(int i=0;i<allMusic.size();i++){
+        final Map<String,Object> item=allMusic.get(i);
+        if(checkIfStored((String) item.get("path"))){
+            likeMusic.setImageResource(R.drawable.xihuan2);
+        }
+        else{
+            likeMusic.setImageResource(R.drawable.xihuan);
+        }
+
+        likeMusic.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MyAsyncTask(likeMusic,item).execute();
+
+            }
+        });}
+
+
+
+
+
+
         mMusicDuration=(TextView)findViewById(R.id.CurrentTime);
         mTotalMusicDuration=(TextView)findViewById(R.id.totalTime);
         mSeekbar=(SeekBar)findViewById(R.id.musicSeekBar);
@@ -115,6 +334,7 @@ public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayI
         setSupportActionBar(mToolbar);
 
         mDisc.setPlayInfoListener(this);
+        mDisc.setOnClickListener(this);
         mIvLast.setOnClickListener(this);
         mIvNext.setOnClickListener(this);
         mIvPlayOrPause.setOnClickListener(this);
@@ -141,6 +361,35 @@ public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayI
         mTotalMusicDuration.setText(duration2Time(0));
         mDisc.setMusicDataList(mMusicDatas);
     }
+
+
+    //刷新收藏列表
+    private void refreshStoreMusic(Map<String,Object> musicInfo){
+        int i=0;
+        for(i=0;i<storedMusic.size();i++){
+            Map<String,Object> map=storedMusic.get(i);
+            String path=(String)map.get("path");
+            if(path.equals((String) musicInfo.get("path"))){
+                storedMusic.remove(i);
+             //   this.sendBroadcast();
+                likeMusicAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+
+        storedMusic.add(musicInfo);
+        likeMusicAdapter.notifyDataSetChanged();
+    }
+
+
+
+
+
+
+
+
+
+
 
     //设置透明状态栏
     private void makeStatusBarTransparent(){
@@ -342,6 +591,20 @@ public class PlayerActivity extends AppCompatActivity implements DiscView.IPlayI
         }
         else if(view==mIvLast){
             mDisc.last();
+        }
+        else if(view==mDisc){
+
+            //mDisc.setVisibility(INVISIBLE);
+
+            DefaultLrcBulider bulider=new DefaultLrcBulider();
+
+            //lrcView.setVisibility(VISIBLE);
+            lrcView.setLrc(bulider.getLrcRows(GetLrc.getLrcFromAssets(GetLrc.parseJOSNWithGSON(mMusicDatas.get(4).getMusicName(),4))).toString());
+
+            lrcView.setPlayer(mMediaPlayer);
+
+            lrcView.init();
+
         }
     }
 

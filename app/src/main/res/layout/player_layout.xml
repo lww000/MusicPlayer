@@ -32,6 +32,14 @@
         android:layout_below="@id/toolBar"
         android:layout_above="@+id/MusicTime"/>
 
+    <com.example.boomq.musicplayer.LrcView.LrcView
+        android:layout_below="@id/toolBar"
+        android:id="@+id/lrcview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/MusicTime"
+        />
+
     <RelativeLayout
         android:id="@+id/MusicTime"
         android:layout_above="@+id/PlayOption"
@@ -60,7 +68,7 @@
             android:paddingStart="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:thumb="@drawable/ic_seekbar_thumb_src"/>
+            android:thumb="@drawable/ic_seekbar_thumb_src" />
 
         <TextView
             android:id="@+id/totalTime"
@@ -88,20 +96,27 @@
         <ImageView
             android:id="@+id/ivLast"
             android:src="@drawable/ic_last_src"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
         <ImageView
             android:id="@+id/ivPlayOrPause"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/ic_play_src"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
         <ImageView
             android:id="@+id/ivNext"
             android:src="@drawable/ic_next_src"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <ImageView
+            android:id="@+id/like_music"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/xihuan2" />
     </LinearLayout>
 
 </com.example.boomq.musicplayer.Player.BackgroundAnimationRelativeLayout>

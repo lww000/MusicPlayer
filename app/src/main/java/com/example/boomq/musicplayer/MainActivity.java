@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.boomq.musicplayer.HistoryPlay.PlayHistoryActivity;
+import com.example.boomq.musicplayer.LikeMusic.LikeMusicActivity;
 import com.example.boomq.musicplayer.PlayerList.PlayerListActivity;
 
 /**
@@ -42,6 +44,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
              case R.id.local_music:
                  Intent intent=new Intent(MainActivity.this, PlayerListActivity.class);
                  startActivity(intent);
+                 break;
+             case R.id.history_music:
+                 Intent intent1=new Intent(MainActivity.this, PlayHistoryActivity.class);
+                 startActivity(intent1);
+                 break;
+             case R.id.like_music:
+                 Intent intent2=new Intent(MainActivity.this, LikeMusicActivity.class);
+                 startActivity(intent2);
+                 break;
          }
     }
 

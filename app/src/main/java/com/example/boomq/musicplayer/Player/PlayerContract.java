@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import com.example.boomq.musicplayer.Base.BaseModel;
 import com.example.boomq.musicplayer.Base.BasePresenter;
 import com.example.boomq.musicplayer.Base.BaseView;
+import com.example.boomq.musicplayer.HistoryPlay.MusicSQLiteHelper;
 import com.example.boomq.musicplayer.MyMusic;
 
 interface PlayerContract {
@@ -20,5 +21,6 @@ interface PlayerContract {
         abstract void startUpdateSeekBarProgress();
         abstract void queryMusicData();
         abstract Bitmap getAlbumArt(int album_id);
+//        abstract void onWritePlayLog(String path, long time, MusicSQLiteHelper mHelper);
     }
 }

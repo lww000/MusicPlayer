@@ -3,6 +3,7 @@ package com.example.boomq.musicplayer.Player;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.example.boomq.musicplayer.HistoryPlay.MusicSQLiteHelper;
 import com.example.boomq.musicplayer.MyMusic;
 
 /**
@@ -50,4 +51,9 @@ public class PlayerPresenter extends PlayerContract.PlayerPresenter {
     Bitmap getAlbumArt(int album_id) {
         return model.getAlbumArt(album_id);
     }
+
+//    @Override
+//    void onWritePlayLog(String path, long time, MusicSQLiteHelper mHelper) {
+//        model.onWritePlayLog(path, time, mHelper);
+//    }
 }

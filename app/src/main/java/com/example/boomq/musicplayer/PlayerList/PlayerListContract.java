@@ -4,6 +4,7 @@ package com.example.boomq.musicplayer.PlayerList;
 import com.example.boomq.musicplayer.Base.BaseModel;
 import com.example.boomq.musicplayer.Base.BasePresenter;
 import com.example.boomq.musicplayer.Base.BaseView;
+import com.example.boomq.musicplayer.HistoryPlay.MusicSQLiteHelper;
 import com.example.boomq.musicplayer.MyMusic;
 
 /**
@@ -23,5 +24,6 @@ interface PlayerListContract {
     abstract class PlayerListPresenter extends BasePresenter<PlayerListView,PlayerListModel> {
         abstract void updateProgress();
         abstract void queryMusic();
+        abstract void onWritePlayLog(String path, long time, MusicSQLiteHelper mHelper);
     }
 }

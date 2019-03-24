@@ -29,6 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".HistoryPlay.PlayHistoryActivity"></activity>
+        <activity android:name=".LikeMusic.LikeMusicActivity"></activity>
 
         <service
             android:name="com.example.boomq.musicplayer.Player.MusicService"

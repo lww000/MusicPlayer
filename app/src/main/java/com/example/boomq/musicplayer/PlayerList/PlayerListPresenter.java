@@ -2,6 +2,7 @@ package com.example.boomq.musicplayer.PlayerList;
 
 import android.content.Context;
 
+import com.example.boomq.musicplayer.HistoryPlay.MusicSQLiteHelper;
 import com.example.boomq.musicplayer.MyMusic;
 
 /**
@@ -49,5 +50,10 @@ public class PlayerListPresenter extends PlayerListContract.PlayerListPresenter 
     @Override
     void queryMusic() {
        model.queryMusic();
+    }
+
+    @Override
+    void onWritePlayLog(String path, long time, MusicSQLiteHelper mHelper) {
+        model.onWritePlayLog(path, time, mHelper);
     }
 }

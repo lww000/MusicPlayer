@@ -24,6 +24,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.boomq.musicplayer.HistoryPlay.MusicSQLiteHelper;
 import com.example.boomq.musicplayer.MyMusic;
 import com.example.boomq.musicplayer.Player.PlayerActivity;
 import com.example.boomq.musicplayer.PlayerList.PlayerListContract;
@@ -41,27 +42,36 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnTouc
    private MediaPlayer mediaPlayer;
    private MusicAdapter musicAdapter;
    private List<MyMusic> musicPlayList;
-   private AppCompatSeekBar seekBar;
-   private TextView musicTimeStart,musicTimeEnd,bottomMusicName,bottomMusicSinger;
+//   private AppCompatSeekBar seekBar;
+   private TextView bottomMusicName,bottomMusicSinger;
    private ImageView bottomMusicPic;
    private int musicPosition=-1;
    private Button playButton;
    private PlayerListPresenter presenter;
    private RelativeLayout bottomMusic;
+   private MusicSQLiteHelper mHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playerlist_layout);
+
+
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
             actionBar.hide();
         }
+
+
         requestUsePermission();
+
         initView();
+
         presenter=new PlayerListPresenter(this,this);
         presenter.queryMusic();
+
+        mHelper=new MusicSQLiteHelper(this,"media.db",null,4);
     }
 
     private void requestUsePermission(){
@@ -90,14 +100,14 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnTouc
     }
 
     private  void initView(){
-        musicTimeStart=findViewById(R.id.time_start);
-        musicTimeEnd=findViewById(R.id.time_end);
+//        musicTimeStart=findViewById(R.id.time_start);
+//        musicTimeEnd=findViewById(R.id.time_end);
         bottomMusicName=findViewById(R.id.music_name2);
         bottomMusicSinger=findViewById(R.id.music_singer2);
         bottomMusicPic=findViewById(R.id.musicAlbumPic);
 
-        seekBar=findViewById(R.id.seek_bar);
-        seekBar.setOnSeekBarChangeListener(this);
+//        seekBar=findViewById(R.id.seek_bar);
+//        seekBar.setOnSeekBarChangeListener(this);
 
         playButton=findViewById(R.id.music_play);
         Button lastMusicButton=findViewById(R.id.last_music);
@@ -133,19 +143,30 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnTouc
                 mediaPlayer=new MediaPlayer();
                 mediaPlayer.setOnCompletionListener(this);
             }
+
+
+            String path=myMusic.getPath();
+            long time=System.currentTimeMillis();
+
             mediaPlayer.reset();//播放前重置播放器
-            mediaPlayer.setDataSource(myMusic.getPath());//设置播放源
+
+            mediaPlayer.setDataSource(path);//设置播放源
             mediaPlayer.prepare();
             mediaPlayer.start();
-            musicTimeEnd.setText(parseDate(mediaPlayer.getDuration()));
+
+
+            presenter.onWritePlayLog(path,time,mHelper);
+
+//            musicTimeEnd.setText(parseDate(mediaPlayer.getDuration()));
             bottomMusicName.setText(myMusic.getMusicName());
             bottomMusicSinger.setText(myMusic.getSinger());
             bottomMusicPic.setImageBitmap(myMusic.getAlbumPic());
-            seekBar.setMax(mediaPlayer.getDuration());
+//            seekBar.setMax(mediaPlayer.getDuration());
             presenter.updateProgress();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void changePlayingMusic(int position){
@@ -231,8 +252,13 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnTouc
 
     @Override
     public void updateUI1() {
-        seekBar.setProgress(mediaPlayer.getCurrentPosition());
-        musicTimeStart.setText(parseDate(mediaPlayer.getCurrentPosition()));
+//        if(mediaPlayer!=null){
+//            if(mediaPlayer.isPlaying()){
+//                seekBar.setProgress(mediaPlayer.getCurrentPosition());
+//                musicTimeStart.setText(parseDate(mediaPlayer.getCurrentPosition()));
+//            }
+//        }
+
     }
 
     @Override

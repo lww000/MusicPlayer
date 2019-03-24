@@ -8,7 +8,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/music_list"
-        android:layout_above="@id/seekbar_layout"
+        android:layout_above="@id/music_manager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar">
@@ -86,34 +86,5 @@
         </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/seekbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/time_start"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="0:0"/>
-
-        <android.support.v7.widget.AppCompatSeekBar
-            android:id="@+id/seek_bar"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="10"/>
-
-        <TextView
-            android:id="@+id/time_end"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="4:9"/>
-    </LinearLayout>
 
 </RelativeLayout>

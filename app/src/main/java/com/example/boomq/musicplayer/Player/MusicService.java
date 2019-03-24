@@ -44,7 +44,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     private List<MyMusic> mMusicDatas=new ArrayList<>();
 
     private MusicReceiver mMusicReceiver=new MusicReceiver();
-    private MediaPlayer mMediaPlayer=new MediaPlayer();
+    public MediaPlayer mMediaPlayer=new MediaPlayer();
 
 
 
@@ -85,6 +85,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMusicReceiver,intentFilter);
     }
+
 
     @Override
     public void onDestroy(){

@@ -1,6 +1,7 @@
 package com.example.boomq.musicplayer.PlayerList;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,7 +10,9 @@ import android.net.Uri;
 import android.os.Message;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 
+import com.example.boomq.musicplayer.HistoryPlay.MusicSQLiteHelper;
 import com.example.boomq.musicplayer.MyMusic;
 import com.example.boomq.musicplayer.PlayerList.PlayerListCallback;
 import com.example.boomq.musicplayer.PlayerList.PlayerListContract;
@@ -90,6 +93,24 @@ public class PlayerListModel implements PlayerListContract.PlayerListModel {
             mBitmap=BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.unknown_music);
         }
         return mBitmap;
+    }
+
+    public void onWritePlayLog(String path, long time, MusicSQLiteHelper mHelper){
+        String sql="select * from playhistory where data=?";
+        Cursor cursor=mHelper.query(sql,new String[]{path});
+        if(!cursor.moveToFirst()){
+            ContentValues values=new ContentValues();
+            values.put("data",path);
+            values.put("playdate",time);
+            mHelper.insert("playhistory",values);
+            Log.i("TAG", "log insert ok! ");
+        }
+        else{
+            sql="update playhistory set playdate=? where data=?";
+            mHelper.update(sql,new String[]{String.valueOf(time),path});
+            Log.i("TAG", "log update ok! ");
+        }
+        cursor.close();
     }
  }
 
